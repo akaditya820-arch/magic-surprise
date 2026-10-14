@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100720">
+<title>Magic Surprise 💖</title>
+<style>
+:root{--pink:#ff9fe7;--purple:#b88cff;--white:#fff7ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--white);font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% 0%,#42216d 0%,#1a0d35 43%,#080511 100%);overflow-x:hidden}
+#sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.star{position:absolute;color:#fff;opacity:.45;animation:twinkle 2.4s ease-in-out infinite alternate;text-shadow:0 0 10px #e6aaff}
+@keyframes twinkle{to{opacity:1;transform:scale(1.3)}}
+.float{position:fixed;bottom:-40px;z-index:1;pointer-events:none;animation:rise 7s linear forwards}
+@keyframes rise{to{transform:translateY(-115vh) rotate(35deg);opacity:0}}
+main{position:relative;z-index:2;width:min(92%,440px);margin:auto;min-height:100vh;display:flex;align-items:center;padding:28px 0}
+.screen{display:none;width:100%;animation:appear .65s ease}
+.screen.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card{padding:26px 21px;border:1px solid #d59aff50;border-radius:27px;background:linear-gradient(145deg,#ffffff12,#a56bff08);box-shadow:0 0 36px #b45bff24,inset 0 0 25px #ffffff05;backdrop-filter:blur(8px);text-align:center}
+.moon{font-size:49px;filter:drop-shadow(0 0 15px #ff8de2)}
+h1{font-size:clamp(30px,8vw,42px);line-height:1.15;color:#ffc4ef;text-shadow:0 0 18px #ee71ff55;margin:15px 0}
+h2{color:#ffd3f4;margin:10px 0;font-size:25px}
+p{color:#eee2ff;line-height:1.8}
+.sub{font-size:14px;color:#cdb8e8}
+input,select{width:100%;padding:15px;border-radius:28px;border:1px solid #c995ff;background:#170c2c;color:#fff;font-size:16px;outline:none;margin:10px 0}
+input::placeholder{color:#c6b2dc}
+button{width:100%;border:0;border-radius:28px;padding:15px;margin-top:11px;background:linear-gradient(100deg,#b73dff,#ed54c4,#ff91c9);color:white;font-size:16px;font-weight:750;box-shadow:0 0 22px #d64cff38;cursor:pointer;transition:transform .18s,filter .18s}
+button:active{transform:scale(.97);filter:brightness(1.12)}
+button.alt{background:#ffffff0c;border:1px solid #d7a1ff60;box-shadow:none}
+.poem{padding:22px 15px;margin:20px 0;border-radius:19px;border:1px solid #e8c4ff28;background:#ffffff09;line-height:2;font-size:17px;white-space:pre-line;color:#fff0fc}
+.tag{display:inline-block;padding:6px 12px;border-radius:20px;background:#d75bd326;color:#ffc6f0;font-size:12px;letter-spacing:.5px}
+.footer{font-size:12px;color:#bca8d4;margin-top:22px}
+.row{display:flex;gap:9px}.row button{flex:1}
+@media(max-width:360px){.card{padding:22px 15px}.poem{font-size:16px}}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+<main>
+<section class="screen active" id="home">
+ <div class="card">
+  <div class="moon">🌙</div>
+  <div class="tag">A LITTLE MAGIC FOR YOU</div>
+  <h1>Ek Chhota Sa<br>Surprise 💌</h1>
+  <p>Kabhi-kabhi kuch pyare lafz<br>poora din khoobsurat bana dete hain. ✨</p>
+  <p class="sub">Pehle apna naam batao na… 💖</p>
+  <input id="visitorName" maxlength="35" autocomplete="given-name" placeholder="Apna naam likho…" aria-label="Your name">
+  <button id="openBtn">✨ Open My Surprise ✨</button>
+  <div class="footer">Made with 💗 to make you smile</div>
+ </div>
+</section>
+<section class="screen" id="welcome">
+ <div class="card">
+  <div class="moon">🦋</div>
+  <p>Hey there,</p><h1 id="helloName"></h1>
+  <p>Iss chhoti si duniya mein tumhare liye kuch khaas lafz hain. 🌸</p>
+  <div class="poem">Tumhari muskaan ek chhoti si roshni hai,
+jo kisi ka din khoobsurat bana sakti hai. 💖</div>
+  <button id="readBtn">Read Your Little Note 💌</button>
+ </div>
+</section>
+<section class="screen" id="poetry">
+ <div class="card">
+  <div class="moon" id="poemEmoji">🌷</div>
+  <div class="tag" id="poemCategory">A NOTE FOR YOU</div>
+  <h2 id="poemTitle">Tumhare liye…</h2>
+  <div class="poem" id="poemText" aria-live="polite"></div>
+  <p class="sub" id="poemSign"></p>
+  <button id="nextBtn">Ek Aur Pyari Si Line ✨</button>
+  <button class="alt" id="shareBtn">💌 Share This Surprise</button>
+  <button class="alt" id="backBtn">↩ Start Again</button>
+  <div class="footer">Har naam apni jagah special hai. 💗</div>
+ </div>
+</section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const poems = [
+ {cat:'FRIENDSHIP 🫂',emoji:'🦋',title:'Dosti wali feeling',text:n=>`${n}, dosti sirf roz baat karne ka naam nahi,\nKabhi door rehkar bhi yaad aane ka naam hai. 💛\n\nSome people make ordinary moments feel special,\nand that is a little kind of magic. ✨`},
+ {cat:'CUTE 💗',emoji:'🌸',title:'Ek cute si baat',text:n=>`Suno ${n}, ek baat batayein? 🌷\nKuch log bina koshish ke hi achhe lagte hain,\nJaise baarish ki khushboo, jaise subah ki dhoop. ☀️\n\nYour little spark makes the world feel softer. 💕`},
+ {cat:'EMOTIONAL 💌',emoji:'🌙',title:'Dil se ek note',text:n=>`${n}, har din perfect ho zaroori nahi,\nPar har din mein ek chhoti si umeed ho sakti hai. 💜\n\nWhen life feels loud, remember to be gentle with yourself.\nYou deserve kindness, peace and moments that make you smile. ✨`},
+ {cat:'COMPLIMENTS ✨',emoji:'🌟',title:'Tumhari apni chamak',text:n=>`Dear ${n}, tumhari value sirf is baat se nahi\nki duniya tumhe kaise dekhti hai. 💖\n\nYour thoughts, your kindness, your unique little ways—\nthey all make you wonderfully you. 🌈\n\nKhud par bharosa rakhna; tumhari kahaani abhi likhi ja rahi hai.`},
+ {cat:'FRIENDSHIP 🫂',emoji:'💫',title:'Yaadon ke naam',text:n=>`${n}, kuch mulaqatein yaad ban jaati hain,\nAur kuch baatein muskaan ban jaati hain. 🌼\n\nA good friend is a little sunshine on cloudy days.\nMay you always find people who celebrate the real you. 💛`},
+ {cat:'CUTE 💗',emoji:'🐻',title:'Chhoti si khushi',text:n=>`Hey ${n}! 💕\nEk chhoti si smile tumhare naam,\nEk pyari si wish tumhari shaam ke naam. 🌙\n\nMay your day be sprinkled with tiny joys,\nsweet surprises and reasons to laugh. ✨`},
+ {cat:'EMOTIONAL 💌',emoji:'🕊️',title:'Ek gentle reminder',text:n=>`${n}, kabhi apni chhoti progress ko kam mat samajhna. 🌷\nDheere chalna bhi aage badhna hi hota hai.\n\nYou don't have to have everything figured out today.\nTake a breath, keep hope close, and go at your own pace. 💜`},
+ {cat:'COMPLIMENTS ✨',emoji:'🌹',title:'A special compliment',text:n=>`${n}, tum sirf ek naam nahi, apni ek alag kahaani ho. ✨\nTumhare ideas, tumhari kindness aur tumhara andaaz\ntumhe apne tareeke se special banate hain.\n\nNever dim your light to fit in. The world has room for you. 💖`}
+];
+let name='',lastIndex=-1;
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function nextPoem(){let i;if(poems.length<2)i=0;else{do{i=Math.floor(Math.random()*poems.length)}while(i===lastIndex)}lastIndex=i;const p=poems[i];$('poemEmoji').textContent=p.emoji;$('poemCategory').textContent=p.cat;$('poemTitle').textContent=p.title;$('poemText').textContent=p.text(name);$('poemSign').textContent=`With a little kindness, just for ${name} 💗`;}
+$('openBtn').addEventListener('click',()=>{name=$('visitorName').value.trim();if(!name){$('visitorName').focus();alert('Pehle apna naam likho na 💖');return;}$('helloName').textContent=name+' 💖';nextPoem();show('welcome');});
+$('visitorName').addEventListener('keydown',e=>{if(e.key==='Enter')$('openBtn').click()});
+$('readBtn').addEventListener('click',()=>show('poetry'));
+$('nextBtn').addEventListener('click',nextPoem);
+$('backBtn').addEventListener('click',()=>{show('home');$('visitorName').value='';});
+$('shareBtn').addEventListener('click',async()=>{const data={title:'A Little Magic For You 💖',text:'Maine tumhare liye ek cute sa surprise banaya hai! Naam daal kar dekho ✨',url:location.href};if(navigator.share){try{await navigator.share(data)}catch(e){}}else{try{await navigator.clipboard.writeText(location.href);alert('Link copy ho gaya! Ab Instagram Story par share karo 💖')}catch(e){prompt('Is link ko copy karke share karo:',location.href)}}});
+for(let i=0;i<75;i++){const s=document.createElement('span');s.className='star';s.textContent=Math.random()>.5?'✦':'·';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.fontSize=(8+Math.random()*14)+'px';s.style.animationDelay=Math.random()*3+'s';$('sky').appendChild(s)}
+setInterval(()=>{const h=document.createElement('span');h.className='float';h.textContent=['💗','✨','💕','🌸','🦋'][Math.floor(Math.random()*5)];h.style.left=Math.random()*100+'%';h.style.fontSize=(14+Math.random()*16)+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),7000)},850);
+</script>
+</body>
+</html>
